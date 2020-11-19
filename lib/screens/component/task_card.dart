@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todo/constant.dart';
 import 'package:todo/models/task.dart';
+import 'package:todo/controller/checktask_controller.dart';
+import 'package:get/get.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({
+  TaskCard({
     Key key,
     @required this.size,
     @required this.task,
@@ -14,6 +16,8 @@ class TaskCard extends StatelessWidget {
   final Size size;
   final Task task;
   final Function press, swipe;
+
+  CheckTaskController checkTaskController = Get.find<CheckTaskController>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +69,15 @@ class TaskCard extends StatelessWidget {
                       margin: EdgeInsets.only(right: kDefaultPaddin / 4),
                       child: Hero(
                         tag: "${task.id}-count",
-                        child: Text(
-                          task.countTask.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: Colors.grey[700]),
-                        ),
+                        child: Obx(() {
+                            return Text(
+                              checkTaskController.taskCountList[task.id]['all'].toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: Colors.grey[700]),
+                            );
+                        }),
                       ),
                     ),
                     Hero(

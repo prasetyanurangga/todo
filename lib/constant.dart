@@ -28,3 +28,18 @@ List<List<Color>> backColor = [
     Color(0xFF11998e),
   ],
 ];
+
+List<Icon> backColor = [
+  Icon(
+    Icons.person,
+    color: backColor[0][1],
+  ),
+  Icon(
+    Icons.mail,
+    color: backColor[1][1],
+  ),
+  Icon(
+    Icons.home,
+    color: backColor[2][1],
+  ),
+];

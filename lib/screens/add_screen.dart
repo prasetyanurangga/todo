@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:todo/constant.dart';
 import 'package:todo/models/task.dart';
+import 'package:get/get.dart';
+import 'package:todo/controller/checktask_controller.dart';
+
 
 class AddScreen extends StatefulWidget {
   AddScreen({
-    Key key,
-    @required this.task,
+    Key key
   }) : super(key: key);
-
-  final Task task;
 
   @override
   _AddScreenState createState() => _AddScreenState();
@@ -16,10 +16,14 @@ class AddScreen extends StatefulWidget {
 
 class _AddScreenState extends State<AddScreen> {
   bool check = false;
+  Task task;
+
+  final CheckTaskController  checkTaskController = Get.find<CheckTaskController>();
 
   @override
   void initState() {
     super.initState();
+    task = Get.arguments;
   }
 
   @override
@@ -39,7 +43,7 @@ class _AddScreenState extends State<AddScreen> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           icon: Icon(Icons.clear, color: Colors.grey),
         ),
@@ -67,17 +71,19 @@ class _AddScreenState extends State<AddScreen> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                     ),
-                    autofocus: true,
+                    autofocus: true,  
+                    controller:  checkTaskController.contentTextController,  
+                  
                   ),
                   SizedBox(height: kDefaultPaddin * 2),
                   Row(
                     children: [
                       Container(
                         margin: EdgeInsets.only(right: kDefaultPaddin / 4),
-                        child: widget.task.icon,
+                        child: task.icon,
                       ),
                       Text(
-                        widget.task.name,
+                        task.name,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
@@ -91,7 +97,7 @@ class _AddScreenState extends State<AddScreen> {
                       Container(
                         margin: EdgeInsets.only(right: kDefaultPaddin / 4),
                         child: Icon(Icons.calendar_today,
-                            color: widget.task.colors[1]),
+                            color: task.colors[1]),
                       ),
                       Text(
                         "Today",
@@ -107,15 +113,17 @@ class _AddScreenState extends State<AddScreen> {
             ),
           ),
           Hero(
-            tag: "${widget.task.id}-fab",
+            tag: "${task.id}-fab",
             child: SizedBox(
               height: 80,
               child: Container(
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
+                    onTap: () async {
+                      await checkTaskController.addCheckTask(task.id);
+                      checkTaskController.getCheckTask(task.id);
+                      Get.back();
                     },
                     child: Icon(Icons.add, color: Colors.white),
                   ),
@@ -125,8 +133,8 @@ class _AddScreenState extends State<AddScreen> {
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      widget.task.colors[0],
-                      widget.task.colors[1],
+                      task.colors[0],
+                      task.colors[1],
                     ],
                   ),
                 ),

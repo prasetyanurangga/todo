@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todo/constant.dart';
 import 'package:todo/models/task.dart';
+import 'package:todo/controller/checktask_controller.dart';
+import 'package:get/get.dart';
 
-class CustomCheckbox extends StatefulWidget {
+class CustomCheckbox extends StatelessWidget {
   CustomCheckbox({
     Key key,
     @required this.checkTask,
     @required this.color,
-    @required this.press,
   }) : super(key: key);
 
+  
   final CheckTask checkTask;
   final Color color;
-  final Function press;
 
-  @override
-  _CustomCheckboxState createState() => _CustomCheckboxState();
-}
-
-class _CustomCheckboxState extends State<CustomCheckbox> {
-  bool check = false;
-
-  @override
-  void initState() {
-    super.initState();
-    check = widget.checkTask.check;
-  }
+  CheckTaskController  checkTaskController = Get.find<CheckTaskController>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +24,15 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
       child: FlatButton(
         padding: EdgeInsets.symmetric(
             vertical: kDefaultPaddin / 2, horizontal: kDefaultPaddin / 2),
-        onPressed: () {
-          setState(() {
-            check = !check;
-          });
+        onPressed: () async {
+           await checkTaskController.updateCheckTask(
+              CheckTask(
+                idTask: checkTask.idTask,
+                id:checkTask.id,
+                name: checkTask.name,
+                checked: checkTask.checked == 0 ? 1 : 0,
+              )
+           );
         },
         child: Row(
           children: [
@@ -45,18 +40,18 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
               width: 24,
               height: 24,
               child: Checkbox(
-                value: check,
-                activeColor: widget.color,
+                value: checkTask.checked == 0 ? false : true,
+                activeColor: color,
                 onChanged: (n) {},
               ),
             ),
             Container(
               margin: EdgeInsets.only(left: kDefaultPaddin),
               child: Text(
-                widget.checkTask.name,
+                checkTask.name,
                 style: Theme.of(context).textTheme.bodyText1.copyWith(
                     color: Colors.grey[700],
-                    decoration: check
+                    decoration: checkTask.checked == 1
                         ? TextDecoration.lineThrough
                         : TextDecoration.none),
               ),
@@ -66,4 +61,5 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
       ),
     );
   }
+
 }

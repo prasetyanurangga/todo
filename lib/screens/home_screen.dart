@@ -3,6 +3,8 @@ import 'package:todo/constant.dart';
 import 'package:todo/models/task.dart';
 import 'package:todo/screens/component/task_card.dart';
 import 'package:todo/screens/detail_screen.dart';
+import 'package:get/get.dart';
+import 'package:todo/controller/checktask_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -16,6 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
       PageController(viewportFraction: 0.8, keepPage: true, initialPage: 1);
   Color currentColor1 = backColor[0][0];
   Color currentColor2 = backColor[0][1];
+
+  final checkTaskController = Get.put(CheckTaskController());
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -161,47 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: size,
                             task: tasks[index],
                             press: () {
-                              Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder:
-                                          (BuildContext context, _, __) {
-                                        return DetailScreen(
-                                            task1: tasks[index]);
-                                      },
-                                      transitionsBuilder: (___,
-                                          Animation<double> animation,
-                                          ____,
-                                          Widget child) {
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        );
-                                      },),);
+                              checkTaskController.getCheckTask(tasks[index].id);
+                              Get.toNamed("/detailScreen", arguments: tasks[index]);
                             },
-                            swipe:(d){
-        if(d.delta.dy > 0){
-          Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder:
-                                          (BuildContext context, _, __) {
-                                        return DetailScreen(
-                                            task1: tasks[index]);
-                                      },
-                                      transitionsBuilder: (___,
-                                          Animation<double> animation,
-                                          ____,
-                                          Widget child) {
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        );
-                                      },),);
-        }
-      }
                           );
                         },
                       ),
