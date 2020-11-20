@@ -5,10 +5,14 @@ import 'package:todo/screens/component/custom_checkbox.dart';
 import 'package:todo/screens/add_screen.dart';
 import 'package:get/get.dart';
 import 'package:todo/controller/checktask_controller.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:intl/intl.dart';
+
 
 class DetailScreen extends StatelessWidget {
   final Task task1 = Get.arguments;
   final CheckTaskController  checkTaskController = Get.find<CheckTaskController>();
+  final newFormat = DateFormat("yyyy-MM-dd");
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +25,12 @@ class DetailScreen extends StatelessWidget {
           },
           icon: Icon(Icons.chevron_left, color: Colors.grey[700]),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.grey[700],
-            ),
-          ),
-        ],
         elevation: 0,
         backgroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "${task1.id}-fab",
-        backgroundColor: task1.colors[1],
+        backgroundColor: backColor[task1.color][1],
         onPressed: () {
           Get.toNamed("/addScreen", arguments: task1);
         },
@@ -56,7 +51,7 @@ class DetailScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: kDefaultPaddin),
                       child: Hero(
                         tag: "${task1.id}-icon",
-                        child: task1.icon,
+                        child: icons[task1.icon],
                       ),
                     ),
                     Row(
@@ -65,13 +60,15 @@ class DetailScreen extends StatelessWidget {
                           margin: EdgeInsets.only(right: kDefaultPaddin / 4),
                           child: Hero(
                             tag: "${task1.id}-count",
-                            child: Text(
-                              task1.countTask.toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(color: Colors.grey[700]),
-                            ),
+                            child: Obx((){
+                              return Text(
+                                checkTaskController.taskModel.value.countAll.toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(color: Colors.grey[700]),
+                              );
+                            }),
                           ),
                         ),
                         Hero(
@@ -101,22 +98,32 @@ class DetailScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: LinearProgressIndicator(
-                              value: task1.progress,
-                              backgroundColor: Colors.grey[400],
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  task1.colors[1]),
-                            ),
+                            child: Obx(() { 
+                              return FAProgressBar(
+                                currentValue: (checkTaskController.taskModel.value.countChecked == 0) ? 0 : checkTaskController.taskModel.value.countChecked,
+                                animatedDuration :  const Duration(milliseconds: 300),
+                                direction : Axis.horizontal,
+                                borderRadius : 0,
+                                backgroundColor : Colors.grey[400],
+                                progressColor : backColor[task1.color][1],
+                                maxValue: (checkTaskController.taskModel.value.countAll == 0) ? 100 : checkTaskController.taskModel.value.countAll,
+                                size: 5,
+                              );
+                            })
                           ),
                           Container(
+                            alignment: Alignment.centerRight,
+                            width: kDefaultPaddin * 1.8,
                             margin: EdgeInsets.only(left: kDefaultPaddin),
-                            child: Text(
-                              "${task1.percen}%",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(color: Colors.grey[700]),
-                            ),
+                            child: Obx((){
+                              return Text(
+                                (checkTaskController.taskModel.value.countAll == 0 || checkTaskController.taskModel.value.countChecked == 0) ? "0 %" : "${((checkTaskController.taskModel.value.countChecked / checkTaskController.taskModel.value.countAll) * 100).toStringAsFixed(0)}%",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(color: Colors.grey[700]),
+                              );
+                            })
                           ),
                         ],
                       ),
@@ -143,16 +150,45 @@ class DetailScreen extends StatelessWidget {
                 ),
               ),
               Obx((){
+
+                var dateNow = newFormat.format(DateTime.now()); 
+                var checkList = checkTaskController.checkTaskModelList.where((i) => (i.createdAt == dateNow)).toList();
                 return Column(
                   children: [
-                    for (var i in checkTaskController.checkTaskModelList)
-                      CustomCheckbox(checkTask: i, color: task1.colors[1]),
+                    for (var i in checkList)
+                      CustomCheckbox(checkTask: i, color: backColor[task1.color][1]),
                   ],
                 );
               }),
               SizedBox(
                 height: kDefaultPaddin,
               ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: kDefaultPaddin,
+                  bottom: kDefaultPaddin / 2,
+                  left: kDefaultPaddin * 2,
+                  right: kDefaultPaddin * 2,
+                ),
+                child: Text(
+                  "Tomorrow",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: Colors.grey[700]),
+                ),
+              ),
+              Obx((){
+
+                var dateNow = newFormat.format(DateTime.now()); 
+                var checkList = checkTaskController.checkTaskModelList.where((i) => (i.createdAt != dateNow)).toList();
+                return Column(
+                  children: [
+                    for (var i in checkList)
+                      CustomCheckbox(checkTask: i, color: backColor[task1.color][1]),
+                  ],
+                );
+              }),
               // Padding(
               //   padding: const EdgeInsets.only(
               //     top: kDefaultPaddin,

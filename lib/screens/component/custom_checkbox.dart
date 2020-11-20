@@ -31,8 +31,11 @@ class CustomCheckbox extends StatelessWidget {
                 id:checkTask.id,
                 name: checkTask.name,
                 checked: checkTask.checked == 0 ? 1 : 0,
+                createdAt: checkTask.createdAt,
               )
            );
+           checkTaskController.getTaskById(checkTask.idTask);
+           checkTaskController.getTaskAll();
         },
         child: Row(
           children: [
@@ -42,7 +45,20 @@ class CustomCheckbox extends StatelessWidget {
               child: Checkbox(
                 value: checkTask.checked == 0 ? false : true,
                 activeColor: color,
-                onChanged: (n) {},
+                onChanged:  (n) async {
+                  print(checkTask.createdAt);
+                   await checkTaskController.updateCheckTask(
+                      CheckTask(
+                        idTask: checkTask.idTask,
+                        id:checkTask.id,
+                        name: checkTask.name,
+                        checked: checkTask.checked == 0 ? 1 : 0,
+                        createdAt: checkTask.createdAt,
+                      )
+                   );
+                   checkTaskController.getTaskById(checkTask.idTask);
+                    checkTaskController.getTaskAll();
+                },
               ),
             ),
             Container(

@@ -3,6 +3,7 @@ import 'package:todo/constant.dart';
 import 'package:todo/models/task.dart';
 import 'package:get/get.dart';
 import 'package:todo/controller/checktask_controller.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 
 class AddScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   bool check = false;
   Task task;
+  String choose = "Today";
 
   final CheckTaskController  checkTaskController = Get.find<CheckTaskController>();
 
@@ -80,8 +82,9 @@ class _AddScreenState extends State<AddScreen> {
                     children: [
                       Container(
                         margin: EdgeInsets.only(right: kDefaultPaddin / 4),
-                        child: task.icon,
+                        child: icons[task.icon],
                       ),
+                      SizedBox(width: 20),
                       Text(
                         task.name,
                         style: Theme.of(context)
@@ -97,14 +100,42 @@ class _AddScreenState extends State<AddScreen> {
                       Container(
                         margin: EdgeInsets.only(right: kDefaultPaddin / 4),
                         child: Icon(Icons.calendar_today,
-                            color: task.colors[1]),
+                            color: backColor[task.color][1]),
                       ),
-                      Text(
-                        "Today",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: Colors.grey[700]),
+                      // Text(
+                      //   "Today",
+                      //   style: Theme.of(context)
+                      //       .textTheme
+                      //       .bodyText1
+                      //       .copyWith(color: Colors.grey[700]),
+                      // ),
+                      SizedBox(width: 20),
+                      Expanded(
+                          child : DropdownButton(
+                            isExpanded: true,
+                            underline: SizedBox(),
+                            icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                            value: choose,
+                            items: [
+                              'Today',
+                              'Tomorrow'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value, 
+                                  style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: Colors.grey[700])),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                                setState((){
+                                    choose = value;
+                                });
+                            },
+                          ),
                       ),
                     ],
                   ),
@@ -121,8 +152,11 @@ class _AddScreenState extends State<AddScreen> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () async {
-                      await checkTaskController.addCheckTask(task.id);
+                      await checkTaskController.addCheckTask(task.id, choose);
                       checkTaskController.getCheckTask(task.id);
+                      checkTaskController.getTaskById(task.id);
+                      checkTaskController.getCountTodoToday();
+                      checkTaskController.getTaskAll();
                       Get.back();
                     },
                     child: Icon(Icons.add, color: Colors.white),
@@ -133,8 +167,8 @@ class _AddScreenState extends State<AddScreen> {
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      task.colors[0],
-                      task.colors[1],
+                      backColor[task.color][0],
+                      backColor[task.color][1],
                     ],
                   ),
                 ),

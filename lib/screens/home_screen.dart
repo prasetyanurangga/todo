@@ -48,21 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: IconButton(
               onPressed: () {},
               icon: Icon(
-                Icons.menu,
+                Icons.clear,
                 color: Colors.white,
               ),
             ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-              ),
-            ],
           ),
-          body: Container(
+          body: SingleChildScrollView( 
+            child :Container(
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,10 +75,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 50,
                           child: Container(
                             decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
-                                  offset: Offset(0, 4),
-                                  color: kShadowColor,
+                                  color: Color(0xFFB7B7B7).withOpacity(.3),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3), // changes position of shadow
                                 ),
                               ],
                             ),
@@ -109,18 +105,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: kDefaultPaddin),
                         child: Text(
-                          "You like feel good\nYou have 3 tasks to do today",
+                          "You like feel good\nYou have ${checkTaskController.countTodoToday} tasks to do today",
                           style: Theme.of(context).textTheme.bodyText1.copyWith(
                               color: Colors.white, fontWeight: FontWeight.w100),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: kDefaultPaddin),
-                        child: Text(
-                          "Today, 11 November 2020",
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              color: Colors.white, fontWeight: FontWeight.w100),
-                        ),
+                        child: Obx(() => Text(
+                            "Today, ${checkTaskController.dateNow}",
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: Colors.white, fontWeight: FontWeight.w100),
+                          ))
                       ),
                     ],
                   ),
@@ -136,19 +132,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (_pageScroll.page <= 1.4 &&
                               _pageScroll.page > 0.5) {
                             setState(() {
-                              currentColor1 = tasks[1].colors[0];
-                              currentColor2 = tasks[1].colors[1];
+                              currentColor1 = backColor[1][0];
+                              currentColor2 = backColor[1][1];
                             });
                           } else if (_pageScroll.page <= 2.0 &&
                               _pageScroll.page > 1.5) {
                             setState(() {
-                              currentColor1 = tasks[2].colors[0];
-                              currentColor2 = tasks[2].colors[1];
+                              currentColor1 = backColor[2][0];
+                              currentColor2 = backColor[2][1];
                             });
                           } else {
                             setState(() {
-                              currentColor1 = tasks[0].colors[0];
-                              currentColor2 = tasks[0].colors[1];
+                              currentColor1 = backColor[0][0];
+                              currentColor2 = backColor[0][1];
                             });
                           }
                           // print("kedua-1 : ${(size.width * 0.8) - 30}");
@@ -158,24 +154,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         return true;
                       },
-                      child: PageView.builder(
-                        controller: _pageScroll,
-                        itemCount: tasks.length,
-                        itemBuilder: (context, index) {
-                          return TaskCard(
-                            size: size,
-                            task: tasks[index],
-                            press: () {
-                              checkTaskController.getCheckTask(tasks[index].id);
-                              Get.toNamed("/detailScreen", arguments: tasks[index]);
+                      child: Obx((){
+
+                          return PageView.builder(
+                            controller: _pageScroll,
+                            itemCount: checkTaskController.taskModelList.length,
+                            itemBuilder: (context, index) {
+                              return TaskCard(
+                                size: size,
+                                task: checkTaskController.taskModelList[index],
+                                press: () {
+                                  checkTaskController.getCheckTask(checkTaskController.taskModelList[index].id);
+                                  checkTaskController.getTaskById(checkTaskController.taskModelList[index].id);
+                                  Get.toNamed("/detailScreen", arguments: checkTaskController.taskModelList[index]);
+                                },
+                              );
                             },
                           );
-                        },
-                      ),
+
+                      })
                     ),
                   ),
                 )
               ],
+            ),
             ),
           ),
         ),

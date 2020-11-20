@@ -54,12 +54,9 @@ class TaskCard extends StatelessWidget {
                   children: [
                     Hero(
                       tag: "${task.id}-icon",
-                      child: task.icon,
+                      child: icons[task.icon],
                     ),
-                    Icon(
-                      Icons.more_vert,
-                      color: task.colors[1],
-                    ),
+                    Container(),
                   ],
                 ),
                 SizedBox(height: 200),
@@ -69,15 +66,13 @@ class TaskCard extends StatelessWidget {
                       margin: EdgeInsets.only(right: kDefaultPaddin / 4),
                       child: Hero(
                         tag: "${task.id}-count",
-                        child: Obx(() {
-                            return Text(
-                              checkTaskController.taskCountList[task.id]['all'].toString(),
+                        child: Text(
+                              task.countAll.toString(),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1
                                   .copyWith(color: Colors.grey[700]),
-                            );
-                        }),
+                            ),
                       ),
                     ),
                     Hero(
@@ -108,16 +103,18 @@ class TaskCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: LinearProgressIndicator(
-                          value: task.progress,
+                          value: (task.countAll == 0 || task.countChecked == 0) ? 0.0 : (task.countChecked / task.countAll),
                           backgroundColor: Colors.grey[400],
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(task.colors[1]),
+                              AlwaysStoppedAnimation<Color>(backColor[task.color][1]),
                         ),
                       ),
                       Container(
+                        alignment: Alignment.centerRight,
+                            width: kDefaultPaddin * 1.8,
                         margin: EdgeInsets.only(left: kDefaultPaddin),
                         child: Text(
-                          "${task.percen}%",
+                          (task.countAll == 0 || task.countChecked == 0) ? "0 %" : "${((task.countChecked / task.countAll) * 100).toStringAsFixed(0)}%",
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1

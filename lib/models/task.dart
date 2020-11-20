@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:todo/constant.dart';
 
 class Task {
-  final int id, countAll, countChecked, countUnchecked, icon, colors;
-  final String name;
+  int id, countAll, countChecked, countUnChecked, icon, color;
+  String name;
 
   Task({
     this.id,
     this.name,
     this.icon,
-    this.colors,
+    this.color,
     this.countAll,
     this.countChecked,
-    this.countUnchecked,
+    this.countUnChecked,
   });
 
-  CheckTask.fromJson(Map<String, dynamic> json){
+  Task.fromJson(Map<String, dynamic> json){
     id                = json['id'];
     name              = json['name'];
     countAll          = json['count_all'];
     countChecked      = json['count_checked'];
-    countUnchecked    = json['count_unchecked'];
+    countUnChecked    = json['count_unchecked'];
     color             = json['color_task'];
     icon              = json['icon_task'];
   }
@@ -31,7 +31,7 @@ class Task {
     data['name'] = this.name;
     data['count_all'] = this.countAll;
     data['count_checked'] = this.countChecked;
-    data['count_unchecked'] = this.countUnchecked;
+    data['count_unchecked'] = this.countUnChecked;
     data['color_task'] = this.color;
     data['icon_task'] = this.icon;
     return data;
@@ -42,7 +42,7 @@ class Task {
 class CheckTask {
   int idTask;
   int id;
-  String name;
+  String name, createdAt;
   int checked;
 
   CheckTask({
@@ -50,6 +50,7 @@ class CheckTask {
     this.idTask,
     this.name,
     this.checked,
+    this.createdAt,
   });
 
   CheckTask.fromJson(Map<String, dynamic> json){
@@ -57,6 +58,7 @@ class CheckTask {
     idTask   = json['id_task'];
     name     = json['name'];
     checked    = json['checked'];
+    createdAt = json['created_at'];
   }
 
   Map<String, dynamic> toJson(){
@@ -65,46 +67,9 @@ class CheckTask {
     data['id_task'] = this.idTask;
     data['name']    = this.name;
     data['checked']   = this.checked;
+    data['created_at'] = this.createdAt;
     return data;
   }
 
 }
 
-List<Task> tasks = [
-  Task(
-    id: 1,
-    countTask: 9,
-    name: "Personal",
-    icon: Icon(
-      Icons.person,
-      color: backColor[0][1],
-    ),
-    colors: backColor[0],
-    progress: 0.9,
-    percen: 90,
-  ),
-  Task(
-    id: 2,
-    countTask: 10,
-    name: "Work",
-    icon: Icon(
-      Icons.mail,
-      color: backColor[1][1],
-    ),
-    colors: backColor[1],
-    progress: 0.8,
-    percen: 80,
-  ),
-  Task(
-    id: 3,
-    countTask: 19,
-    name: "Home",
-    icon: Icon(
-      Icons.home,
-      color: backColor[2][1],
-    ),
-    colors: backColor[2],
-    progress: 0.5,
-    percen: 50,
-  ),
-];
