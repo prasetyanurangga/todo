@@ -1,16 +1,30 @@
-# todo
+# ToDo - Flutter App
 
-A new Flutter project.
 
-## Getting Started
+**Packages we are using:**
 
-This project is a starting point for a Flutter application.
+- [Flutter Svg](https://pub.dev/packages/flutter_svg)
+- [Get](https://pub.dev/packages/get)
+- [Google Fonts](https://pub.dev/packages/google_fonts)
+- [Sqflite](https://pub.dev/packages/sqflite)
+- [Path Provider](https://pub.dev/packages/path_provider)
+- [FLutter Animation Progress Bar](https://pub.dev/packages/flutter_animation_progress_bar)
+- [Intl](https://pub.dev/packages/intl)
 
-A few resources to get you started if this is your first Flutter project:
+**Fonts**
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+-  [Poppins](https://fonts.google.com/specimen/Poppins)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**UI Credit**
+
+- Design by: Jae-seong, Jeong - [(iPhone X - Todo Concept)](https://dribbble.com/shots/3812962-iPhone-X-Todo-Concept)
+
+**Contact**
+
+For more information contact angganurprasetya4@gmail.com
+
+### ToDo App Final UI
+
+![App UI](https://raw.githubusercontent.com/prasetyanurangga/todo/master/todo_app_ui.png)
+
+![Demo](https://raw.githubusercontent.com/prasetyanurangga/todo/master/todo_app.gif)
