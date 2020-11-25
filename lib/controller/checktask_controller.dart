@@ -38,14 +38,14 @@ class CheckTaskController extends GetxController{
   		var newFormat = DateFormat("dd MMMM yyyy");
     	dateNow.value = newFormat.format(DateTime.now());	
     	print(dateNow.value);
-  		await DBHelper.task_getall().then((List<Map<String, dynamic>> taskList){
-  			print(taskList.length);
-	  		if(taskList.length == 0){
-	  			addTask(0,0, 'Personal');
-	  			addTask(1,1, 'Work');
-	  			addTask(2,2, 'Home');
-	  		}
-  		});
+  		// await DBHelper.task_getall().then((List<Map<String, dynamic>> taskList){
+  		// 	print(taskList.length);
+	  	// 	if(taskList.length == 0){
+	  	// 		addTask(0,0, 'Personal');
+	  	// 		addTask(1,1, 'Work');
+	  	// 		addTask(2,2, 'Home');
+	  	// 	}
+  		// });
   	}
 
 	

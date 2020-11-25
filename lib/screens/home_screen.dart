@@ -15,11 +15,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _pageScroll =
-      PageController(viewportFraction: 0.8, keepPage: true, initialPage: 1);
-  Color currentColor1 = backColor[0][0];
-  Color currentColor2 = backColor[0][1];
+      PageController(viewportFraction: 0.85, keepPage: true);
+  List<Color> currentColor = backColor[0];
 
   final checkTaskController = Get.put(CheckTaskController());
+  String greeting(){
+    var hour  = DateTime.now().hour;
+    print(hour);
+    if(hour < 12){
+      return "Morning";
+    }else if(hour < 17){
+      return "Afternoon";
+    }else{
+      return "Evening";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            currentColor1,
-            currentColor2,
-          ],
+          colors: currentColor
         ),
       ),
       duration: Duration(milliseconds: 200),
@@ -45,13 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             centerTitle: true,
             title: Text("TODO"),
-            leading: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.clear,
-                color: Colors.white,
-              ),
-            ),
           ),
           body: SingleChildScrollView( 
             child :Container(
@@ -79,10 +79,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(0xFFB7B7B7).withOpacity(.3),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3), // changes position of shadow
+                                  color: Colors.black.withOpacity(0.35),
+                                  offset: Offset(0, 5),
+                                  blurRadius: 15.0,
+                                  spreadRadius: 0.0,
                                 ),
                               ],
                             ),
@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Text(
-                        "Hello, Sofi",
+                        "Good ${greeting()}, Sofi",
                         style: Theme.of(context)
                             .textTheme
                             .headline4
@@ -125,55 +125,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 400,
                   child: Padding(
                     padding: EdgeInsets.zero,
-                    child: NotificationListener(
-                      onNotification: (notification) {
-                        if (notification is ScrollUpdateNotification) {
-                          print(_pageScroll.page);
-                          if (_pageScroll.page <= 1.4 &&
-                              _pageScroll.page > 0.5) {
+                    child: Obx((){
+                        return PageView.builder(
+                          allowImplicitScrolling: true,
+                          controller: _pageScroll,
+                          itemCount: checkTaskController.taskModelList.length,
+                          onPageChanged: (index){
                             setState(() {
-                              currentColor1 = backColor[1][0];
-                              currentColor2 = backColor[1][1];
+                              currentColor = backColor[index];
                             });
-                          } else if (_pageScroll.page <= 2.0 &&
-                              _pageScroll.page > 1.5) {
-                            setState(() {
-                              currentColor1 = backColor[2][0];
-                              currentColor2 = backColor[2][1];
-                            });
-                          } else {
-                            setState(() {
-                              currentColor1 = backColor[0][0];
-                              currentColor2 = backColor[0][1];
-                            });
-                          }
-                          // print("kedua-1 : ${(size.width * 0.8) - 30}");
-                          // print("kedua-2 : ${(size.width * 0.8) + 30}");
-                          // print("ketiga-1 : ${((size.width * 0.8)) + 31}");
-                          // print("ketiga-2 : ${((size.width * 0.8) * 2) + 30}");
-                        }
-                        return true;
-                      },
-                      child: Obx((){
-
-                          return PageView.builder(
-                            controller: _pageScroll,
-                            itemCount: checkTaskController.taskModelList.length,
-                            itemBuilder: (context, index) {
-                              return TaskCard(
-                                size: size,
-                                task: checkTaskController.taskModelList[index],
-                                press: () {
-                                  checkTaskController.getCheckTask(checkTaskController.taskModelList[index].id);
-                                  checkTaskController.getTaskById(checkTaskController.taskModelList[index].id);
-                                  Get.toNamed("/detailScreen", arguments: checkTaskController.taskModelList[index]);
-                                },
-                              );
-                            },
-                          );
-
-                      })
-                    ),
+                          },
+                          itemBuilder: (context, index) {
+                            return TaskCard(
+                              size: size,
+                              task: checkTaskController.taskModelList[index],
+                              press: () {
+                                checkTaskController.getCheckTask(checkTaskController.taskModelList[index].id);
+                                checkTaskController.getTaskById(checkTaskController.taskModelList[index].id);
+                                Get.toNamed("/detailScreen", arguments: checkTaskController.taskModelList[index]);
+                              },
+                            );
+                          },
+                        );
+                    })
                   ),
                 )
               ],

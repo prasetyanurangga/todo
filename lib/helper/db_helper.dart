@@ -21,7 +21,7 @@ class DBHelper{
 			Directory documentsDirectory = await getApplicationDocumentsDirectory();
     		String _path = join(documentsDirectory.path, "todos.db");
     		print(_path);
-    		// await deleteDatabase(_path);
+    		await deleteDatabase(_path);
 			_db = await openDatabase(
 				_path,
 				version: _version,
@@ -31,6 +31,9 @@ class DBHelper{
 				    );
 				    await db.execute(
 						"CREATE TABLE $_tableName_2 (id integer PRIMARY KEY autoincrement, name TEXT, color_task integer,icon_task integer);"
+				    );
+				    await db.execute(
+						"INSERT INTO $_tableName_2 (name, color_task, icon_task) VALUES ('Personal', 0, 0), ('Work', 1, 1), ('Home', 2,2);"
 				    );
 				}
 			); 

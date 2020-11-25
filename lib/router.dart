@@ -6,9 +6,10 @@ import 'package:get/get.dart';
 class RouterConfig {
 
 	static final route = [
-		GetPage(name: '/detailScreen', page: () => DetailScreen()),
-		GetPage(name: '/addScreen', page: () => AddScreen()),
+		GetPage(name: '/detailScreen', page: () => DetailScreen(), transition: Transition.fade),
+		GetPage(name: '/addScreen', page: () => AddScreen(), transition: Transition.rightToLeft),
 		GetPage(name: '/homeScreen', page: () => HomeScreen()),
 	];
 	
 }
+	

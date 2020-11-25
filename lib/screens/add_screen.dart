@@ -114,7 +114,7 @@ class _AddScreenState extends State<AddScreen> {
                           child : DropdownButton(
                             isExpanded: true,
                             underline: SizedBox(),
-                            icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                            // icon: SvgPicture.asset("assets/icons/dropdown.svg"),
                             value: choose,
                             items: [
                               'Today',

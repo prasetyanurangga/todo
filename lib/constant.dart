@@ -16,16 +16,16 @@ const kDefaultPaddin = 20.0;
 
 List<List<Color>> backColor = [
   [
-    Color(0xFF6BB8E7),
-    Color(0xFF555EDD),
+    Color(0xFF56CCF2),
+    Color(0xFF2F80ED),
   ],
   [
     Color(0xFFF0B353),
     Color(0xFFE94276),
   ],
   [
-    Color(0xFF38ef7d),
-    Color(0xFF11998e),
+    Color(0xFF34e89e),
+    Color(0xFF0f3443),
   ],
 ];
 
@@ -43,3 +43,5 @@ List<Icon> icons = [
     color: backColor[2][1],
   ),
 ];
+
+
